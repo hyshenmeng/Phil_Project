@@ -1,0 +1,405 @@
+---
+title: "Project_breast_cancer"
+output: html_document
+---
+
+## define setting
+
+```{r message=FALSE}
+set.seed(4.0)
+library(e1071)
+library(kernlab)
+library(caret)
+```
+
+## Data1: breast_cancer
+
+```{r}
+#---import data---
+rawdata <- read.csv(file="F:/ML_data/breast_cancer_compelete.csv")
+```
+
+### Case1.1: breast_cancer(10% traning/90% testing)
+
+```{r warning=FALSE}
+#---split data---
+ratio=0.1
+train.index <- createDataPartition(rawdata$class, p=ratio, list=FALSE)
+train <- rawdata[ train.index,]
+test  <- rawdata[-train.index,]
+prop.table(table(train$class))
+prop.table(table(test$class))
+prop.table(table(rawdata$class))
+
+#---linear SVM---
+## train a linear SVM
+linear.classifier <- svm(class~., data=train, scaled = T, kernel='linear', cost=1, cross=10, probability=TRUE)
+linear.classifier
+## evaluate model performance
+linear.prediction <- predict(linear.classifier, test, type='response')
+confusionMatrix(linear.prediction, test$class)
+## tune model parameters
+mod1 <- tune(svm, class~., data=train, kernel='linear', ranges=list(cost=10^(-5:5)))
+mod1$best.parameters
+## improve model performance
+bestmod1 <- mod1$best.model
+bestmod1
+linear.prediction <- predict(bestmod1, test, type='response')
+confusionMatrix(linear.prediction, test$class)
+
+#---Gaussian SVM---
+## train a Gaussian SVM
+rbf.classifier <- svm(class~., data=train, scaled = T, kernel='radial', gamma=1, cost=1, cross=10, probability=TRUE)
+rbf.classifier
+## evaluate model performance
+rbf.prediction <- predict(rbf.classifier, test, type='response')
+confusionMatrix(rbf.prediction, test$class)
+## tune model parameters
+mod2 <- tune(svm, class~., data=train, kernel='radial', ranges=list(cost=10^(-5:5), gamma=seq(0.05, 1, by=0.05)))
+mod2$best.parameters
+## improve model performance
+bestmod2 <- mod2$best.model
+bestmod2
+rbf.prediction <- predict(bestmod2, test, type='response')
+confusionMatrix(rbf.prediction, test$class)
+
+#---polynomial SVM---
+## train a polynomial SVM
+poly.classifier <- svm(class~., data=train, scaled = T, kernel='polynomial', degree=3,gamma=1, cost=1, cross=10, probability=TRUE)
+poly.classifier
+## evaluate model performance
+poly.prediction <- predict(poly.classifier, test, type='response')
+confusionMatrix(poly.prediction, test$class)
+## tune model parameters
+mod3 <- tune(svm, class~., data=train, kernel='polynomial', ranges=list(cost=10^(-5:5), degree=1:5, gamma=seq(0.05, 1, by=0.05)))
+mod3$best.parameters
+## improve model performance
+bestmod3 <- mod3$best.model
+bestmod3
+poly.prediction <- predict(bestmod3, test, type='response')
+confusionMatrix(poly.prediction, test$class)
+
+#---sigmoid SVM---
+## train a sigmoid SVM
+sig.classifier <- svm(class~., data=train, scaled = T, kernel='sigmoid', gamma=1, cost=1, cross=10, probability=TRUE)
+sig.classifier
+## evaluate model performance
+sig.prediction <- predict(sig.classifier, test, type='response')
+confusionMatrix(sig.prediction, test$class)
+## tune model parameters
+mod4 <- tune(svm, class~., data=train, kernel='sigmoid', ranges=list(cost=10^(-5:5), gamma=seq(0.05, 1, by=0.05)))
+mod4$best.parameters
+## improve model performance
+bestmod4 <- mod4$best.model
+bestmod4
+sig.prediction <- predict(bestmod4, test, type='response')
+confusionMatrix(sig.prediction, test$class)
+```
+
+### Case1.2: breast_cancer(20% traning/80% testing)
+
+```{r warning=FALSE}
+#---split data---
+ratio=0.2
+train.index <- createDataPartition(rawdata$class, p=ratio, list=FALSE)
+train <- rawdata[ train.index,]
+test  <- rawdata[-train.index,]
+prop.table(table(train$class))
+prop.table(table(test$class))
+prop.table(table(rawdata$class))
+
+#---linear SVM---
+## train a linear SVM
+linear.classifier <- svm(class~., data=train, scaled = T, kernel='linear', cost=1, cross=10, probability=TRUE)
+linear.classifier
+## evaluate model performance
+linear.prediction <- predict(linear.classifier, test, type='response')
+confusionMatrix(linear.prediction, test$class)
+## tune model parameters
+mod1 <- tune(svm, class~., data=train, kernel='linear', ranges=list(cost=10^(-5:5)))
+mod1$best.parameters
+## improve model performance
+bestmod1 <- mod1$best.model
+bestmod1
+linear.prediction <- predict(bestmod1, test, type='response')
+confusionMatrix(linear.prediction, test$class)
+
+#---Gaussian SVM---
+## train a Gaussian SVM
+rbf.classifier <- svm(class~., data=train, scaled = T, kernel='radial', gamma=1, cost=1, cross=10, probability=TRUE)
+rbf.classifier
+## evaluate model performance
+rbf.prediction <- predict(rbf.classifier, test, type='response')
+confusionMatrix(rbf.prediction, test$class)
+## tune model parameters
+mod2 <- tune(svm, class~., data=train, kernel='radial', ranges=list(cost=10^(-5:5), gamma=seq(0.05, 1, by=0.05)))
+mod2$best.parameters
+## improve model performance
+bestmod2 <- mod2$best.model
+bestmod2
+rbf.prediction <- predict(bestmod2, test, type='response')
+confusionMatrix(rbf.prediction, test$class)
+
+#---polynomial SVM---
+## train a polynomial SVM
+poly.classifier <- svm(class~., data=train, scaled = T, kernel='polynomial', degree=3,gamma=1, cost=1, cross=10, probability=TRUE)
+poly.classifier
+## evaluate model performance
+poly.prediction <- predict(poly.classifier, test, type='response')
+confusionMatrix(poly.prediction, test$class)
+## tune model parameters
+mod3 <- tune(svm, class~., data=train, kernel='polynomial', ranges=list(cost=10^(-5:5), degree=1:5, gamma=seq(0.05, 1, by=0.05)))
+mod3$best.parameters
+## improve model performance
+bestmod3 <- mod3$best.model
+bestmod3
+poly.prediction <- predict(bestmod3, test, type='response')
+confusionMatrix(poly.prediction, test$class)
+
+#---sigmoid SVM---
+## train a sigmoid SVM
+sig.classifier <- svm(class~., data=train, scaled = T, kernel='sigmoid', gamma=1, cost=1, cross=10, probability=TRUE)
+sig.classifier
+## evaluate model performance
+sig.prediction <- predict(sig.classifier, test, type='response')
+confusionMatrix(sig.prediction, test$class)
+## tune model parameters
+mod4 <- tune(svm, class~., data=train, kernel='sigmoid', ranges=list(cost=10^(-5:5), gamma=seq(0.05, 1, by=0.05)))
+mod4$best.parameters
+## improve model performance
+bestmod4 <- mod4$best.model
+bestmod4
+sig.prediction <- predict(bestmod4, test, type='response')
+confusionMatrix(sig.prediction, test$class)
+```
+
+### Case1.3: breast_cancer(30% traning/70% testing)
+
+```{r warning=FALSE}
+#---split data---
+ratio=0.3
+train.index <- createDataPartition(rawdata$class, p=ratio, list=FALSE)
+train <- rawdata[ train.index,]
+test  <- rawdata[-train.index,]
+prop.table(table(train$class))
+prop.table(table(test$class))
+prop.table(table(rawdata$class))
+
+#---linear SVM---
+## train a linear SVM
+linear.classifier <- svm(class~., data=train, scaled = T, kernel='linear', cost=1, cross=10, probability=TRUE)
+linear.classifier
+## evaluate model performance
+linear.prediction <- predict(linear.classifier, test, type='response')
+confusionMatrix(linear.prediction, test$class)
+## tune model parameters
+mod1 <- tune(svm, class~., data=train, kernel='linear', ranges=list(cost=10^(-5:5)))
+mod1$best.parameters
+## improve model performance
+bestmod1 <- mod1$best.model
+bestmod1
+linear.prediction <- predict(bestmod1, test, type='response')
+confusionMatrix(linear.prediction, test$class)
+
+#---Gaussian SVM---
+## train a Gaussian SVM
+rbf.classifier <- svm(class~., data=train, scaled = T, kernel='radial', gamma=1, cost=1, cross=10, probability=TRUE)
+rbf.classifier
+## evaluate model performance
+rbf.prediction <- predict(rbf.classifier, test, type='response')
+confusionMatrix(rbf.prediction, test$class)
+## tune model parameters
+mod2 <- tune(svm, class~., data=train, kernel='radial', ranges=list(cost=10^(-5:5), gamma=seq(0.05, 1, by=0.05)))
+mod2$best.parameters
+## improve model performance
+bestmod2 <- mod2$best.model
+bestmod2
+rbf.prediction <- predict(bestmod2, test, type='response')
+confusionMatrix(rbf.prediction, test$class)
+
+#---polynomial SVM---
+## train a polynomial SVM
+poly.classifier <- svm(class~., data=train, scaled = T, kernel='polynomial', degree=3,gamma=1, cost=1, cross=10, probability=TRUE)
+poly.classifier
+## evaluate model performance
+poly.prediction <- predict(poly.classifier, test, type='response')
+confusionMatrix(poly.prediction, test$class)
+## tune model parameters
+mod3 <- tune(svm, class~., data=train, kernel='polynomial', ranges=list(cost=10^(-5:5), degree=1:5, gamma=seq(0.05, 1, by=0.05)))
+mod3$best.parameters
+## improve model performance
+bestmod3 <- mod3$best.model
+bestmod3
+poly.prediction <- predict(bestmod3, test, type='response')
+confusionMatrix(poly.prediction, test$class)
+
+#---sigmoid SVM---
+## train a sigmoid SVM
+sig.classifier <- svm(class~., data=train, scaled = T, kernel='sigmoid', gamma=1, cost=1, cross=10, probability=TRUE)
+sig.classifier
+## evaluate model performance
+sig.prediction <- predict(sig.classifier, test, type='response')
+confusionMatrix(sig.prediction, test$class)
+## tune model parameters
+mod4 <- tune(svm, class~., data=train, kernel='sigmoid', ranges=list(cost=10^(-5:5), gamma=seq(0.05, 1, by=0.05)))
+mod4$best.parameters
+## improve model performance
+bestmod4 <- mod4$best.model
+bestmod4
+sig.prediction <- predict(bestmod4, test, type='response')
+confusionMatrix(sig.prediction, test$class)
+```
+
+### Case1.4: breast_cancer(40% traning/60% testing)
+
+```{r warning=FALSE}
+#---split data---
+ratio=0.4
+train.index <- createDataPartition(rawdata$class, p=ratio, list=FALSE)
+train <- rawdata[ train.index,]
+test  <- rawdata[-train.index,]
+prop.table(table(train$class))
+prop.table(table(test$class))
+prop.table(table(rawdata$class))
+
+#---linear SVM---
+## train a linear SVM
+linear.classifier <- svm(class~., data=train, scaled = T, kernel='linear', cost=1, cross=10, probability=TRUE)
+linear.classifier
+## evaluate model performance
+linear.prediction <- predict(linear.classifier, test, type='response')
+confusionMatrix(linear.prediction, test$class)
+## tune model parameters
+mod1 <- tune(svm, class~., data=train, kernel='linear', ranges=list(cost=10^(-5:5)))
+mod1$best.parameters
+## improve model performance
+bestmod1 <- mod1$best.model
+bestmod1
+linear.prediction <- predict(bestmod1, test, type='response')
+confusionMatrix(linear.prediction, test$class)
+
+#---Gaussian SVM---
+## train a Gaussian SVM
+rbf.classifier <- svm(class~., data=train, scaled = T, kernel='radial', gamma=1, cost=1, cross=10, probability=TRUE)
+rbf.classifier
+## evaluate model performance
+rbf.prediction <- predict(rbf.classifier, test, type='response')
+confusionMatrix(rbf.prediction, test$class)
+## tune model parameters
+mod2 <- tune(svm, class~., data=train, kernel='radial', ranges=list(cost=10^(-5:5), gamma=seq(0.05, 1, by=0.05)))
+mod2$best.parameters
+## improve model performance
+bestmod2 <- mod2$best.model
+bestmod2
+rbf.prediction <- predict(bestmod2, test, type='response')
+confusionMatrix(rbf.prediction, test$class)
+
+#---polynomial SVM---
+## train a polynomial SVM
+poly.classifier <- svm(class~., data=train, scaled = T, kernel='polynomial', degree=3,gamma=1, cost=1, cross=10, probability=TRUE)
+poly.classifier
+## evaluate model performance
+poly.prediction <- predict(poly.classifier, test, type='response')
+confusionMatrix(poly.prediction, test$class)
+## tune model parameters
+mod3 <- tune(svm, class~., data=train, kernel='polynomial', ranges=list(cost=10^(-5:5), degree=1:5, gamma=seq(0.05, 1, by=0.05)))
+mod3$best.parameters
+## improve model performance
+bestmod3 <- mod3$best.model
+bestmod3
+poly.prediction <- predict(bestmod3, test, type='response')
+confusionMatrix(poly.prediction, test$class)
+
+#---sigmoid SVM---
+## train a sigmoid SVM
+sig.classifier <- svm(class~., data=train, scaled = T, kernel='sigmoid', gamma=1, cost=1, cross=10, probability=TRUE)
+sig.classifier
+## evaluate model performance
+sig.prediction <- predict(sig.classifier, test, type='response')
+confusionMatrix(sig.prediction, test$class)
+## tune model parameters
+mod4 <- tune(svm, class~., data=train, kernel='sigmoid', ranges=list(cost=10^(-5:5), gamma=seq(0.05, 1, by=0.05)))
+mod4$best.parameters
+## improve model performance
+bestmod4 <- mod4$best.model
+bestmod4
+sig.prediction <- predict(bestmod4, test, type='response')
+confusionMatrix(sig.prediction, test$class)
+```
+
+### Case1.5: breast_cancer(50% traning/50% testing)
+
+```{r warning=FALSE}
+#---split data---
+ratio=0.5
+train.index <- createDataPartition(rawdata$class, p=ratio, list=FALSE)
+train <- rawdata[ train.index,]
+test  <- rawdata[-train.index,]
+prop.table(table(train$class))
+prop.table(table(test$class))
+prop.table(table(rawdata$class))
+
+#---linear SVM---
+## train a linear SVM
+linear.classifier <- svm(class~., data=train, scaled = T, kernel='linear', cost=1, cross=10, probability=TRUE)
+linear.classifier
+## evaluate model performance
+linear.prediction <- predict(linear.classifier, test, type='response')
+confusionMatrix(linear.prediction, test$class)
+## tune model parameters
+mod1 <- tune(svm, class~., data=train, kernel='linear', ranges=list(cost=10^(-5:5)))
+mod1$best.parameters
+## improve model performance
+bestmod1 <- mod1$best.model
+bestmod1
+linear.prediction <- predict(bestmod1, test, type='response')
+confusionMatrix(linear.prediction, test$class)
+
+#---Gaussian SVM---
+## train a Gaussian SVM
+rbf.classifier <- svm(class~., data=train, scaled = T, kernel='radial', gamma=1, cost=1, cross=10, probability=TRUE)
+rbf.classifier
+## evaluate model performance
+rbf.prediction <- predict(rbf.classifier, test, type='response')
+confusionMatrix(rbf.prediction, test$class)
+## tune model parameters
+mod2 <- tune(svm, class~., data=train, kernel='radial', ranges=list(cost=10^(-5:5), gamma=seq(0.05, 1, by=0.05)))
+mod2$best.parameters
+## improve model performance
+bestmod2 <- mod2$best.model
+bestmod2
+rbf.prediction <- predict(bestmod2, test, type='response')
+confusionMatrix(rbf.prediction, test$class)
+
+#---polynomial SVM---
+## train a polynomial SVM
+poly.classifier <- svm(class~., data=train, scaled = T, kernel='polynomial', degree=3,gamma=1, cost=1, cross=10, probability=TRUE)
+poly.classifier
+## evaluate model performance
+poly.prediction <- predict(poly.classifier, test, type='response')
+confusionMatrix(poly.prediction, test$class)
+## tune model parameters
+mod3 <- tune(svm, class~., data=train, kernel='polynomial', ranges=list(cost=10^(-5:5), degree=1:5, gamma=seq(0.05, 1, by=0.05)))
+mod3$best.parameters
+## improve model performance
+bestmod3 <- mod3$best.model
+bestmod3
+poly.prediction <- predict(bestmod3, test, type='response')
+confusionMatrix(poly.prediction, test$class)
+
+#---sigmoid SVM---
+## train a sigmoid SVM
+sig.classifier <- svm(class~., data=train, scaled = T, kernel='sigmoid', gamma=1, cost=1, cross=10, probability=TRUE)
+sig.classifier
+## evaluate model performance
+sig.prediction <- predict(sig.classifier, test, type='response')
+confusionMatrix(sig.prediction, test$class)
+## tune model parameters
+mod4 <- tune(svm, class~., data=train, kernel='sigmoid', ranges=list(cost=10^(-5:5), gamma=seq(0.05, 1, by=0.05)))
+mod4$best.parameters
+## improve model performance
+bestmod4 <- mod4$best.model
+bestmod4
+sig.prediction <- predict(bestmod4, test, type='response')
+confusionMatrix(sig.prediction, test$class)
+```
