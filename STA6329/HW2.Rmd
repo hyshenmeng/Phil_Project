@@ -1,0 +1,107 @@
+---
+title: "HW2"
+output:
+  pdf_document:
+    fig_height: 3.5
+---
+
+Page40_Exercise1
+
+```{r}
+hist(islands)
+summary(islands)
+summary(log(islands))
+```
+
+COMMENT: The data on the original scale seems skewed and disperse. The log transformation can help fix it.
+
+Comparison of the Histogram
+
+```{r}
+par(mfrow=c(1,2))
+hist(islands,breaks="Sturges",main="area")
+hist(log(islands),breaks="Sturges",main="log(area)")
+par(mfrow=c(1,2))
+hist(islands,breaks="Scott",main="area")
+hist(log(islands),breaks="Scott",main="log(area)")
+```
+
+Comparison of the Boxplot
+
+```{r}
+par(mfrow=c(1,2))
+boxplot(islands,main="area")
+boxplot(log(islands),main="log(area)")
+```
+
+Comparison of the Dotchart
+
+```{r}
+par(mfrow=c(1,2))
+dotchart(islands,main="area")
+dotchart(log(islands),main="log(area)")
+```
+
+COMMENT: There is no need to use the log transformation in here. Because we can see 
+what is going on with the data using the original data. For example, which observations have extreme values? Regarding the most appropariate graphic, I think it depends on your purpose.
+
+Page40_Exercise2
+
+Scatterplot Matrices
+
+```{r}
+pairs(stackloss)
+cor(stackloss)
+```
+
+COMMENT: Based on correlation coefficients, there are strong linear correlations between stack.loss and Air.Flow, between stack.loss and Water.Temp, between Air.Flow and Water.Temp. To make sure, We need to check the scatterplots individually.
+
+```{r}
+par(mfrow=c(1,1))
+plot(stackloss$stack.loss~stackloss$Air.Flow)
+abline(lm(stackloss$stack.loss~stackloss$Air.Flow),col="red")
+lines(lowess(stackloss$stack.loss~stackloss$Air.Flow),col="blue")
+```
+
+COMMENT: stack.loss and Air.Flow seems linearly correlated.
+
+```{r}
+plot(stackloss$stack.loss~stackloss$Water.Temp)
+abline(lm(stackloss$stack.loss~stackloss$Water.Temp),col="red")
+lines(lowess(stackloss$stack.loss~stackloss$Water.Temp),col="blue")
+```
+
+COMMENT: stack.loss and Water.Temp seems to have nonlinear relationship.
+
+```{r}
+plot(stackloss$stack.loss~stackloss$Acid.Conc.)
+abline(lm(stackloss$stack.loss~stackloss$Acid.Conc.),col="red")
+lines(lowess(stackloss$stack.loss~stackloss$Acid.Conc.),col="blue")
+```
+
+COMMENT: I'm not sure that stack.loss and Water.Temp have any linear or nonlinear relationship.
+
+```{r}
+plot(stackloss$Acid.Conc.~stackloss$Air.Flow)
+abline(lm(stackloss$Acid.Conc.~stackloss$Air.Flow),col="red")
+lines(lowess(stackloss$Acid.Conc.~stackloss$Air.Flow),col="blue")
+```
+
+COMMENT: I'm not sure that Acid.Conc. and Air.Flow have any linear or nonlinear relationship.
+
+```{r}
+plot(stackloss$Acid.Conc.~stackloss$Water.Temp)
+abline(lm(stackloss$Acid.Conc.~stackloss$Water.Temp),col="red")
+lines(lowess(stackloss$Acid.Conc.~stackloss$Water.Temp),col="blue")
+```
+
+COMMENT: I'm not sure that Acid.Conc. and Air.Flow have any linear or nonlinear relationship.
+
+```{r}
+plot(stackloss$Water.Temp~stackloss$Air.Flow)
+abline(lm(stackloss$Water.Temp~stackloss$Air.Flow),col="red")
+lines(lowess(stackloss$Water.Temp~stackloss$Air.Flow),col="blue")
+```
+
+COMMENT: Water.Temp and Air.Flow seems linearly correlated.
+

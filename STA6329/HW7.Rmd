@@ -1,0 +1,87 @@
+---
+title: "HW7"
+output:
+  pdf_document:
+    fig_height: 3.5
+---
+
+Page86_Exercise4
+
+```{r}
+set.seed(19908)
+U<-runif(1000)
+##a
+mean(U)
+var(U)
+sd(U)
+```
+
+COMMENT: If U~U(0,1),then E(U)=1/2, Var(U)=1/12=0.083333, SD(U)=(1/12)^0.5=0.288675.We can see the simulated average, variance, and standard deviation are close to the true values.
+
+```{r}
+##c
+U60<-U[U<0.6]
+prop60<-length(U60)/1000
+prop60
+punif(0.6)
+```
+
+COMMENT: 
+Obviously, the simulated value is close to the theoretical value.
+
+```{r}
+##d
+mean(1/(U+1))
+##e
+par(mfrow=c(1,2))
+hist(U)
+hist(1/(U+1))
+```
+
+Page91_Exercise3
+
+```{r}
+B<-rbinom(10000,18,0.76)
+mean(B)
+var(B)
+```
+
+COMMENT: If B~BIN(18,0.76),then E(U)=13.68, Var(U)=3.2832.We can see the simulated values are close to the theoretical values.
+
+Page95_Exercise2
+
+```{r}
+R<-rpois(20,1.2)
+R
+```
+
+Page99_Exercise3
+
+```{r}
+E<-rexp(10000,9)
+mean(E)
+var(E)
+```
+
+COMMENT: If E1~EXP(3) and E2~EXP(6),then E=min(E1,E2)~EXP(9).
+
+Page101_Exercise3
+
+```{r}
+N<-rnorm(10000,3,4)
+N<-N[abs(N)>2]
+par(mfrow=c(1,2))
+hist(N)
+plot(density(N))
+```
+
+Page104_Exercise2
+
+```{r}
+x1<-runif(10000,0,3)
+y1<-runif(10000)
+mean(cos(x1-y1))*3
+x2<-runif(10000,0,5)
+y2<-runif(10000,0,2)
+mean(exp(-(x2+y2)^2)*(x2+y2)^2)*10
+```

@@ -1,0 +1,208 @@
+---
+title: "HW5"
+output:
+  pdf_document:
+    fig_height: 3.5
+---
+
+Page49_Exercise2
+
+```{r}
+Fibonacci<-numeric(31)
+Fibonacci[1]<-1
+Fibonacci[2]<-1
+for (i in 3:31) Fibonacci[i]<-Fibonacci[i-2]+Fibonacci[i-1]
+Fibonacci
+ratio_seq<-numeric(30)
+for (i in 1:30) ratio_seq[i]<-Fibonacci[i+1]/Fibonacci[i]
+ratio_seq
+golden_ratio<-(1+sqrt(5))/2
+golden_ratio
+```
+
+COMMENT: the sequence of ratio of successive Fibonacci numbers converges to the golden ratio. Please see the appendix for proof.
+
+Page49_Exercise3
+
+```{r}
+##a
+answer<-0
+for (j in 1:5) answer<-answer+j
+answer
+##b
+answer<-NULL
+for (j in 1:5) answer<-c(answer,j)
+answer
+##c
+answer<-0
+for (j in 1:5) answer<-c(answer,j)
+answer
+##d
+answer<-1
+for (j in 1:5) answer<-answer*j
+answer
+##e
+answer<-3
+for (j in 1:15) answer<-c(answer,(7*answer[j]%%31))
+answer
+```
+
+COMMENT: 
+1st=3
+2nd=7*(3%%31)=21
+3rd=7*(21%%31)=147
+4th=7*(147%%31)=161
+5th=7*(161%%31)=42
+...
+16th=7*(182%%31)=189
+
+Page50_Exercise6
+
+```{r}
+##a
+###x<-0.5
+###count<-0
+###while(abs(x-1.5*cos(x))>0.000001){
+###  x<-1.5*cos(x)
+###  count<-count+1
+###}
+###x
+###count
+x<-0.5
+count<-0
+while(abs(x-cos(x)/30-44*x/45)>0.000001){
+  x<-cos(x)/30+44*x/45
+  count<-count+1
+}
+x
+count
+##c
+abs(-1.5*sin(x))
+abs(-sin(x)/30+44/45)
+```
+
+COMMENT: The iteration using the equation x=1.5cos(x) does not converge(The result does not show in here due to the infinite iteration). But the iteration using the equation x=cos(x)/30+44x/45 does converge. Actually, these two equations are equivalent.
+x=cos(x)/30+44x/45
+1350x=45cos(x)+1320x
+30x=45cos(x)
+x=1.5cos(x)
+Part(c) can explain the behavior in part(a).
+
+Page53_Exercise3
+
+```{r}
+twinprimes<-function(n) {
+  if (n >=2) {
+    sieve<-seq(2, n)
+    primes<-c()
+    for (i in seq(2, n)) {
+      if (any(sieve==i)) {
+        primes<-c(primes, i)
+        sieve<-sieve[(sieve%%i)!=0]
+      }
+    }
+    for (i in 2:length(primes)) {
+      if (primes[i]-primes[i-1]==2)
+        print(c(primes[i-1],primes[i])) 
+      }
+  } else {
+    stop("Input value of n should be at least 2.")
+    }
+}
+twinprimes(1000)
+```
+
+Page53_Exercise5
+
+```{r}
+mortgage<-function(n,P,open) {
+  if (open==TRUE) {i=0.005}
+  else {i=0.004}
+  R<-(P*i)/(1-(1+i)^(-n))
+  return(R)
+}
+mortgage(24,20000,TRUE)
+```
+
+Page55_Exercise4
+
+```{r}
+i1<-0
+i2<-0.006
+count<-0
+while(abs(i2-i1)>0.000001){
+  i1<-i2
+  i2<-(1-(1+i1)^(-20))/19
+  count<-count+1
+}
+i1
+i2
+count
+
+i1<-0
+i2<-0.95
+count<-0
+while(abs(i2-i1)>0.000001){
+  i1<-i2
+  i2<-(1-(1+i1)^(-20))/19
+  count<-count+1
+}
+i1
+i2
+count
+```
+
+Page58_Exercise1
+
+```{r}
+curve(x^3+2*x^2-7,0,2)
+x1<-0
+x2<-2
+count<-1
+repeat {
+  count<-count+1
+  x3<-(x1+x2)/2
+  f1<-x1^3+2*x1^2-7
+  f2<-x1^3+2*x1^2-7
+  f3<-x3^3+2*x3^2-7
+  if (f3==0) break
+  else {
+    if (f3>0) {x2<-x3}
+    else {x1<-x3}
+  }
+  if (abs(x2-x1)<0.000001) break
+}
+x1
+f1
+x2
+f2
+count
+```
+
+COMMENT: This bisection algorithm is based on the intermediate value theorem. The intermediate value theorem states that if f is continuous on a closed interval [a,b], and c is any number between  f(a) and f(b) inclusive, then there is at least one number x in the closed interval such that f(x)=c. It has a specializations: if a continuous function has values of opposite sign inside an interval, then it has a root in that interval.  
+
+Page62_Exercise3
+
+```{r}
+bisection<-function(f,x1,x2) {
+  repeat {
+    x3<-(x1+x2)/2
+    f1<-f(x1)
+    f2<-f(x2)
+    f3<-f(x3)
+    if (f3==0) {
+      print(x3)
+      break
+    } else {
+      if (f1*f3>0) {x1<-x3}
+      else {x2<-x3}
+    }
+    if (abs(x2-x1)<0.000001) {
+      print((x1+x2)/2)
+      break
+    } 
+  }
+}
+f<-function(x) x^3+2*x^2-7
+bisection(f,0,2)
+```

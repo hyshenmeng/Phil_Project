@@ -1,0 +1,130 @@
+---
+title: "HW4"
+output:
+  pdf_document:
+    fig_height: 3.5
+---
+
+Page40_Exercise3
+
+(a)
+
+```{r}
+plot(pressure$pressure~pressure$temperature)
+abline(lm(pressure$pressure~pressure$temperature),lty=1)
+cor(pressure)
+```
+
+COMMENT: pressure and temperature seem to have nonlinear relationship.
+
+(b)
+
+```{r}
+plot(pressure$pressure~pressure$temperature)
+abline(lm(pressure$pressure~pressure$temperature),lty=1)
+lines(pressure$temperature,(0.168+0.007*pressure$temperature)^(20/3),lty=2)
+residuals<-with(pressure,pressure-(0.168+0.007*temperature)^(20/3))
+qqnorm(residuals)
+qqline(residuals)
+```
+
+COMMENT: Residuals seem to follow a skewed distribution.
+
+(c)
+
+```{r}
+pressure$pressure2=pressure$pressure^(3/20)
+plot(pressure$pressure2~pressure$temperature)
+abline(lm(pressure$pressure2~pressure$temperature),lty=1)
+fit<-lm(pressure$pressure2~pressure$temperature)
+summary(fit)
+```
+
+COMMENT: After the power transformation, pressure2 and temperature have linear relationship.
+
+(d)
+
+```{r}
+residuals2<-with(pressure,pressure2-(0.168+0.007*temperature))
+qqnorm(residuals2)
+qqline(residuals2)
+```
+
+COMMENT: After the power transformation, Residuals follow a normal distribution.
+
+Page46_Exercise1
+
+(a)
+
+```{r}
+#draw a histogram of log(islands,10) using the "Scott" rule without axes
+hist(log(islands,10),breaks="Scott",axes=FALSE,xlab="area",main="Histogram of Island Areas")
+#draw x coordinate according to the range of log(islands,10)
+axis(1,at=1:5,labels=10^(1:5))
+#draw y coordinate
+axis(2)
+#draw a box around a plot
+box()
+```
+
+(b)
+
+```{r}
+hist(log(islands,10),breaks="Scott",axes=FALSE,xlab="area",main="Histogram of Island Areas",sub="Base-10Log-Scale.")
+axis(1,at=1:5,labels=10^(1:5))
+axis(2)
+box()
+```
+
+(c)
+
+```{r}
+hist(round(log(islands,10)),breaks="Sturges",axes=FALSE,xlab="area",main="Histogram of Island Areas")
+axis(1,at=0.5*(1:8)+0.5,labels=round(10^(0.5*(1:8)+0.5)))
+axis(2)
+box()
+```
+
+Page46_Exercise2
+
+```{r}
+plot(pressure$pressure~pressure$temperature)
+curve((0.168+0.007*x)^(20/3),from=0,to=400,add=TRUE)
+```
+
+(b)
+
+```{r}
+pressure$pressure2=pressure$pressure^(3/20)
+plot(pressure$pressure2~pressure$temperature)
+abline(a=0.168,b=0.007,lty=1)
+```
+
+COMMENT: After the power transformation, pressure2 and temperature have linear relationship.
+
+(c)
+
+```{r}
+plot(pressure$pressure2~pressure$temperature,main="Power Transformation")
+abline(a=0.168,b=0.007,lty=1)
+```
+
+(d)
+
+```{r}
+pdf(file='graph1.pdf')
+par(mfrow=c(1,2))
+plot(pressure$pressure~pressure$temperature)
+curve((0.168+0.007*x)^(20/3),from=0,to=400,add=TRUE)
+plot(pressure$pressure2~pressure$temperature,main="Power Transformation")
+abline(a=0.168,b=0.007,lty=1)
+dev.off()
+pdf(file='graph2.pdf')
+par(mfrow=c(2,1))
+plot(pressure$pressure~pressure$temperature)
+curve((0.168+0.007*x)^(20/3),from=0,to=400,add=TRUE)
+plot(pressure$pressure2~pressure$temperature,main="Power Transformation")
+abline(a=0.168,b=0.007,lty=1)
+dev.off()
+```
+

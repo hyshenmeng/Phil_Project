@@ -1,0 +1,148 @@
+---
+title: "HW8"
+output:
+  pdf_document:
+    fig_height: 3.5
+---
+
+Page108_Exercise1
+
+```{r}
+normal1<-function(n){
+  r1<-runif(n, min=-4, max=4)
+  r2<-runif(n)
+  ans<-r1[r2<2.5*dnorm(r1)]
+  while(length(ans)<n){
+    r1<-runif(n, min=-4, max=4)
+    r2<-runif(n)
+    ans<-c(ans, r1[r2<2.5*dnorm(r1)])
+  }
+  ans[1:n]
+}
+plot(density(normal1(10000)))
+normal2<-function(n){
+  kg<-function(x) 0.2*exp(-0.5*(x^2))
+  r1<-rexp(n, 0.5)
+  r2<-runif(n)
+  ans<-r1[r2*dexp(r1, 0.5)<kg(r1)]
+  while(length(ans)<n){
+    r1<-rexp(n, 0.5)
+    r2<-runif(n)
+    ans<-c(ans, -ans, r1[r2*dexp(r1, 0.5)<kg(r1)], -r1[r2*dexp(r1, 0.5)<kg(r1)])
+  }
+  ans[1:n]
+}
+```
+
+Page111_Exercise4
+
+```{r}
+##a
+curve(sin(x)^2, from=0, to=2*pi)
+##b
+u<-runif(10000, min=0, max=2*pi)
+mean(sin(u)^2*(2*pi))
+```
+
+COMMENT: 
+
+
+```{r}
+##c=pi
+##d
+rsin2<-function(n){
+  r1<-runif(n, min=0, max=2*pi)
+  r2<-runif(n)
+  ans<-r1[r2*0.5<(sin(r1)^2)/pi]
+  while(length(ans)<n){
+    r1<-runif(n, min=0, max=2*pi)
+    r2<-runif(n)
+    ans<-c(ans, r1[r2*0.5<(sin(r1)^2)/pi])
+  }
+  ans[1:n]
+}
+hist(rsin2(1000), freq=FALSE)
+lines(density(rsin2(1000)))
+##e
+rsample<-rsin2(1000000)
+hist(rsample, freq=FALSE)
+lines(density(rsample))
+mean(rsample)
+```
+
+COMMENT: 
+
+
+
+Page115_Exercise2
+
+```{r}
+r1<-c(0.1, 0.5, 0.0, 0.4)
+r2<-c(0.2, 0.3, 0.5, 0.0)
+r3<-c(0.3, 0.0, 0.5, 0.2)
+r4<-c(0.2, 0.3, 0.2, 0.3)
+P<-rbind(r1,r2,r3,r4)
+P
+```
+
+Page116_Exercise1
+
+```{r}
+cells<-c(0.2, 0.3, 0.8, 0.7)
+rnames<-c("sunny", "rainy")
+cnames<-c("sunny", "rainy")
+M<-matrix(cells,nrow=2,dimnames=list(rnames,cnames))
+M
+```
+
+Page118_Exercise1
+
+```{r}
+H3<-1/cbind(seq(1, 3), seq(2, 4), seq(3,5))
+H3
+Hnew<-H3
+Hnew[lower.tri(H3)]<-0
+Hnew
+```
+
+Page123_Exercise3
+
+```{r}
+##a
+hilbert<-function(n){
+  A<-matrix(NA,nrow=n,ncol=n)
+  for (i in 1:n){
+    for (j in 1:n){
+      A[i,j]<-1/(i+j-1)
+    }
+  }
+  return(A)
+}
+##b
+solve(hilbert(1))
+solve(hilbert(2))
+solve(hilbert(3))
+solve(hilbert(4))
+solve(hilbert(5))
+solve(hilbert(6))
+solve(hilbert(7))
+solve(hilbert(8))
+solve(hilbert(9))
+solve(hilbert(10))
+qr.solve(hilbert(1))
+qr.solve(hilbert(2))
+qr.solve(hilbert(3))
+qr.solve(hilbert(4))
+qr.solve(hilbert(5))
+qr.solve(hilbert(6))
+#qr.solve(hilbert(7))
+#qr.solve(hilbert(8))
+#qr.solve(hilbert(9))
+#qr.solve(hilbert(10))
+eigen(hilbert(7))$values
+eigen(hilbert(8))$values
+eigen(hilbert(9))$values
+eigen(hilbert(10))$values
+```
+
+COMMENT: qr.solve() does not work for the cases n=7,8,9, and 10 because the columns of the matrix seems linearly dependent. For example, n=7, one of the smallest eigenvalue is close to 10^(-9) while the largest eigenvalue is over 1.

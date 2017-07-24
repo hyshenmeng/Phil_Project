@@ -1,0 +1,90 @@
+---
+title: "HW9"
+output:
+  pdf_document:
+    fig_height: 3.5
+---
+
+Page124_Exercise6
+
+```{r}
+Hilbert<-function(n){
+  A<-matrix(NA,nrow=n,ncol=n)
+  for (i in 1:n){
+    for (j in 1:n){
+      A[i,j]<-1/(i+j-1)
+    }
+  }
+  return(A)
+}
+##H6
+(H6<-Hilbert(6))
+eigen(H6)
+(inverse.H6<-solve(H6))
+eigen(inverse.H6)
+eigen(inverse.H6)$values
+rev(1/eigen(H6)$values)
+##H7
+(H7<-Hilbert(7))
+eigen(H7)
+(inverse.H7<-solve(H7))
+eigen(inverse.H7)
+eigen(inverse.H7)$values
+rev(1/eigen(H7)$values)
+```
+
+COMMENT: 
+
+
+
+
+Page130_Exercise1
+
+```{r}
+##a
+r1<-c(0.1, 0.2, 0.3, 0.4)
+r2<-c(0.4, 0.1, 0.2, 0.3)
+r3<-c(0.3, 0.4, 0.1, 0.2)
+r4<-c(0.2, 0.3, 0.4, 0.1)
+P<-rbind(r1,r2,r3,r4)
+P
+apply(P, 1, sum)
+```
+
+
+
+```{r}
+##b
+(P2<-P %*% P)
+(P3<-P2 %*% P)
+(P5<-P3 %*% P2)
+(P10<-P5 %*% P5)
+```
+
+COMMENT: We can see every element are getting closer to 0.25.
+
+```{r}
+##c
+solve(rbind((diag(rep(1, 4))-t(P))[-1,], rep(1, 4)), c(0, 0, 0, 1))
+```
+
+COMMENT: The elements of $$P^10$$ seems to converge to x.
+
+```{r}
+##d
+set.seed(111111)
+pseudo<-function(n) {
+  y<-numeric(n)
+  y[1]<-1
+  for (j in 2:n) {
+    y[j]<-sample(1:4, 1, prob=P[y[j-1],], replace=TRUE)
+  }
+  return(y)
+}
+y<-pseudo(10000)
+##e
+table(y)
+table(y)/10000
+```
+
+COMMENT: The relative frequency distribution of the four possible values in the y vector is close to the stationary distribution x caculated earlier.

@@ -1,0 +1,152 @@
+---
+title: "HW6"
+output:
+  pdf_document:
+    fig_height: 3.5
+---
+
+Page64_Exercise5
+
+```{r}
+##a
+mortgage.payment<-function(n,P,ir) {
+  R<-(P*ir)/(1-(1+ir)^(-n))
+  return(R)
+}
+##b
+mortgage.payment(300,100000,0.01)
+##c
+annuity<-function(n,P,ir) {
+  amount<-P*((1+ir)^n-1)/ir
+  return(amount)
+}
+ir<-seq(from=0.01,to=0.20,by=0.01)
+annuity(10,400,ir)
+```
+
+Page71_Exercise2
+
+```{r}
+Newton<-function(ffunc,gfunc,x0,y0,tol) {
+  x<-x0
+  y<-y0
+  f<-function(x,y){eval(ffunc)}
+  g<-function(x,y){eval(gfunc)}
+  fx0<-eval(D(ffunc,"x"))
+  fy0<-eval(D(ffunc,"y"))
+  gx0<-eval(D(gfunc,"x"))
+  gy0<-eval(D(gfunc,"y"))
+  x1<-x0-(gy0*f(x0,y0)-fy0*g(x0,y0))/(fx0*gy0-fy0*gx0)
+  y1<-y0-(fx0*g(x0,y0)-gx0*f(x0,y0))/(fx0*gy0-fy0*gx0)
+  diff<-min(abs(x1-x0),abs(y1-y0))
+  while(diff>tol){
+    x<-x1
+    y<-y1
+    fx0<-eval(D(ffunc,"x"))
+    fy0<-eval(D(ffunc,"y"))
+    gx0<-eval(D(gfunc,"x"))
+    gy0<-eval(D(gfunc,"y"))
+    x1<-x-(gy0*f(x,y)-fy0*g(x,y))/(fx0*gy0-fy0*gx0)
+    y1<-y-(fx0*g(x,y)-gx0*f(x,y))/(fx0*gy0-fy0*gx0)
+    diff<-min(abs(x1-x),abs(y1-y))
+  }
+  return(c(x1,y1))
+}
+Newton(expression(x+y),expression(x^2+2*y^2-2),1,1,0.000001)
+```
+
+COMMENT: 
+To solve the below linear equation system:
+(1) x+y=0
+(2) x^2+2*y^2-2=0
+Inserting y=-x into (2) gives x^2=2/3
+Thus, abs(x)=abs(x)=0.8164966
+
+Page82_Exercise6
+
+```{r}
+sort<-function(x){
+  if (length(x)<2) return(x)
+  for (last in length(x):2){
+    for (first in 1:(last-1)){
+      if(x[first]>x[first+1]){
+        save<-x[first]
+        x[first]<-x[first+1]
+        x[first+1]<-save
+      }  
+    }
+  }
+  return(x)  
+}
+mergesort<-function(x){
+  len<-length(x)
+  if (len<2) result<-x
+  else {
+    y<-x[1:(len/2)]
+    z<-x[(len/2+1):len]
+    y<-mergesort(y)
+    z<-mergesort(z)
+    result<-c()
+    while (min(length(y),length(z))>0){
+      if (y[1]<z[1]){
+        result<-c(result,y[1])
+        y<-y[-1]
+      } else {
+        result<-c(result,z[1])
+        z<-z[-1]
+      }
+    }
+  if (length(y)>0)
+    result<-c(result,y)
+  else
+    result<-c(result,z)
+  }
+  return(result)
+}
+##rnorm(10)  
+x<-rnorm(10)
+system.time(sort(x))
+system.time(mergesort(x))
+##rnorm(1000)  
+x<-rnorm(1000)
+system.time(sort(x))
+system.time(mergesort(x))
+##rnorm(10000)  
+x<-rnorm(10000)
+system.time(sort(x))
+system.time(mergesort(x))
+##rnorm(100000)  
+##x<-rnorm(100000)
+##system.time(sort(x))
+##system.time(mergesort(x))
+```
+
+COMMENT: The merge sort is an recursive procedure, whereas the bubble sort is an iterative procedure. If we take small data sets into account, the bubble sort and merge sort are almost equal with respect to sorting numbers in approximately the same time. When we want to handle ¡®Big Data¡¯, the merge sort is more efficient than the bubble sort.
+
+Bonus Problem
+
+```{r}
+##a
+mtmeans<-lapply(mtcars,mean)
+mtmeans
+mtmeans2<-mapply('-',mtcars,mtmeans)
+mtmeans2
+##b
+transmission<-factor(mtcars$am,labels=c("automatic","manual"))
+tapply(mtcars$mpg,transmission,mean)
+##c
+sapply(mtcars,sd)
+##d
+for (j in 1:3) {
+  bootstraps<-lapply(1:10,function(i) {
+    rows<-sample(1:nrow(mtcars),rep=TRUE)
+    mtcars[rows,]
+  })
+  mtcarslm<-lapply(bootstraps,function(x) {
+    lm(mpg~disp,data=x)
+  })
+  print(mtcarslm)
+}
+```
+
+
