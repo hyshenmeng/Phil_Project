@@ -1,0 +1,25 @@
+---
+title: "Project_breast_cancer"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## define setting
+
+```{r message=FALSE}
+set.seed(4.0)
+library(e1071)
+library(kernlab)
+library(caret)
+```
+
+## Data1: breast_cancer
+
+```{r}
+#---import data---
+data1 <- read.csv(file="D:/Temp/IAValues_updated_v2.txt")
+data2 <- read.csv(file="D:/Temp/muaggatt.txt")
+barplot(data1$mukey)
+
+```
